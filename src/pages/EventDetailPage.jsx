@@ -9,29 +9,45 @@ import {
   FiTrash2,
   FiArrowLeft,
   FiDownload,
+  FiCheck,
+  FiX,
 } from 'react-icons/fi';
 import { eventsAPI } from '../api/events.api';
+import { calendarAPI } from '../api/calendar.api';
 import { useAuth } from '../context/AuthContext';
-import Loading from '../components/common/loading';
-import { formatDate, formatTime, formatDateTime } from '../utils/dateHelpers';
+import Loading from '../components/common/Loading';
+import AttendeesList from '../components/events/AttendeesList';
+import { formatDate, formatTime } from '../utils/dateHelpers';
 import { toast } from 'react-toastify';
 
-const eventDetailPage = () => {
+const EventDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isOrganizer } = useAuth();
+  const { user, isOrganizer, isAuthenticated } = useAuth();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [attendanceStatus, setAttendanceStatus] = useState({
+    isAttending: false,
+    attendeeCount: 0,
+  });
+  const [attendanceLoading, setAttendanceLoading] = useState(false);
 
   useEffect(() => {
     fetchEvent();
-  }, [id]);
+    if (isAuthenticated) {
+      fetchAttendanceStatus();
+    }
+  }, [id, isAuthenticated]);
 
   const fetchEvent = async () => {
     try {
       const response = await eventsAPI.getEventById(id);
       setEvent(response.data);
+      setAttendanceStatus((prev) => ({
+        ...prev,
+        attendeeCount: response.data.attendeeCount || 0,
+      }));
     } catch (error) {
       console.error('Error fetching event:', error);
       toast.error('Failed to load event');
@@ -39,6 +55,45 @@ const eventDetailPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchAttendanceStatus = async () => {
+    try {
+      const response = await eventsAPI.getAttendanceStatus(id);
+      setAttendanceStatus(response.data);
+    } catch (error) {
+      console.error('Error fetching attendance status:', error);
+    }
+  };
+
+  const handleAttendanceToggle = async () => {
+    if (!isAuthenticated) {
+      toast.info('Please login to register for events');
+      return;
+    }
+
+    setAttendanceLoading(true);
+    try {
+      if (attendanceStatus.isAttending) {
+        const response = await eventsAPI.unmarkAttending(id);
+        setAttendanceStatus(response.data);
+        toast.success('Unregistered from event');
+      } else {
+        const response = await eventsAPI.markAttending(id);
+        setAttendanceStatus(response.data);
+        toast.success('Successfully registered for event!');
+      }
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to update attendance';
+      toast.error(message);
+    } finally {
+      setAttendanceLoading(false);
+    }
+  };
+
+  const handleDownloadCalendar = () => {
+    calendarAPI.downloadEventCalendar(id);
+    toast.success('Calendar file downloaded!');
   };
 
   const handleDelete = async () => {
@@ -61,10 +116,7 @@ const eventDetailPage = () => {
 
   const canEditOrDelete = () => {
     if (!user || !event) return false;
-    return (
-      event.organizer.id === user.id ||
-      user.role === 'ADMIN'
-    );
+    return event.organizer.id === user.id || user.role === 'ADMIN';
   };
 
   const getEventTypeColor = (type) => {
@@ -96,7 +148,6 @@ const eventDetailPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
           className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition"
@@ -105,7 +156,6 @@ const eventDetailPage = () => {
           Back
         </button>
 
-        {/* Event Image */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
           <div className="relative h-96">
             {event.imageUrl ? (
@@ -120,7 +170,6 @@ const eventDetailPage = () => {
               </div>
             )}
 
-            {/* Event Type Badge */}
             <div className="absolute top-6 right-6">
               <span
                 className={`px-4 py-2 rounded-full text-sm font-semibold ${getEventTypeColor(
@@ -132,9 +181,7 @@ const eventDetailPage = () => {
             </div>
           </div>
 
-          {/* Event Content */}
           <div className="p-8">
-            {/* Title and Actions */}
             <div className="flex justify-between items-start mb-6">
               <h1 className="text-4xl font-bold text-gray-900">
                 {event.title}
@@ -161,7 +208,15 @@ const eventDetailPage = () => {
               )}
             </div>
 
-            {/* Event Details Grid */}
+            {/* Attendance Info Badge */}
+            <div className="mb-6 inline-flex items-center space-x-2 bg-primary-50 px-4 py-2 rounded-lg">
+              <FiUsers className="text-primary-600" />
+              <span className="text-primary-800 font-medium">
+                {attendanceStatus.attendeeCount} {attendanceStatus.attendeeCount === 1 ? 'person' : 'people'} attending
+                {event.capacity && ` / ${event.capacity} capacity`}
+              </span>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="flex items-start space-x-3">
                 <FiCalendar className="text-primary-600 text-xl mt-1" />
@@ -207,7 +262,6 @@ const eventDetailPage = () => {
               )}
             </div>
 
-            {/* Description */}
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                 About This Event
@@ -217,8 +271,7 @@ const eventDetailPage = () => {
               </p>
             </div>
 
-            {/* Organizer Info */}
-            <div className="border-t border-gray-200 pt-6">
+            <div className="border-t border-gray-200 pt-6 mb-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 Organized By
               </h3>
@@ -240,20 +293,50 @@ const eventDetailPage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <button className="flex-1 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition font-medium">
-                I'm Attending
-              </button>
-              <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">
+            <div className="flex flex-col sm:flex-row gap-4">
+              {!canEditOrDelete() && (
+                <button
+                  onClick={handleAttendanceToggle}
+                  disabled={attendanceLoading}
+                  className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded-lg transition font-medium disabled:opacity-50 ${
+                    attendanceStatus.isAttending
+                      ? 'bg-red-600 text-white hover:bg-red-700'
+                      : 'bg-primary-600 text-white hover:bg-primary-700'
+                  }`}
+                >
+                  {attendanceLoading ? (
+                    <span>Loading...</span>
+                  ) : attendanceStatus.isAttending ? (
+                    <>
+                      <FiX />
+                      <span>Cancel Registration</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiCheck />
+                      <span>I'm Attending</span>
+                    </>
+                  )}
+                </button>
+              )}
+              <button
+                onClick={handleDownloadCalendar}
+                className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+              >
                 <FiDownload />
                 <span>Add to Calendar</span>
               </button>
             </div>
           </div>
         </div>
+
+        {/* Attendees List */}
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <AttendeesList eventId={id} />
+        </div>
       </div>
     </div>
   );
 };
 
-export default eventDetailPage;
+export default EventDetailPage;

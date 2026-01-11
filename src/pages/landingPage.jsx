@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCalendar, FiTrendingUp, FiUsers, FiArrowRight } from 'react-icons/fi';
 import { eventsAPI } from '../api/events.api';
-import EventCard from '../components/events/eventCards';
-import Loading from '../components/common/loading';
+import EventCard from '../components/events/EventCard';
+import Loading from '../components/common/Loading';
 
-const landingPage = () => {
+const LandingPage = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -205,4 +205,4 @@ const landingPage = () => {
   );
 };
 
-export default landingPage;
+export default LandingPage;

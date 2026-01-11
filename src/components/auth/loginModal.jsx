@@ -1,74 +1,72 @@
-import { useState } from "react";
-import {Dialog } from '@headlessui/react';
-import {FiX, FiMail, FiLock} from 'react-icons/fi';
-import {useAuth} from '../../context/AuthContext';
+import { useState } from 'react';
+import { Dialog } from '@headlessui/react';
+import { FiX, FiMail, FiLock } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
-const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
-    const {login} =useAuth();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+const LoginModal = ({ isOpen, onClose, onSwitchToRegister, onOpenForgotPassword }) => {
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
-    const [loading, setLoading] =useState(false);
-    const [errors, setErrors] = useState({});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]:value}));
-        //clear error when user typing
-        if(errors[name]){
-            setErrors((prev) => ({...prev, [name]:''}));
-        }
-    };
+  const validate = () => {
+    const newErrors = {};
+    
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
+    
+    return newErrors;
+  };
 
-    const validate = ()=>{
-        const newErrors ={};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    setLoading(true);
+    const result = await login(formData);
+    setLoading(false);
+    
+    if (result.success) {
+      onClose();
+      setFormData({ email: '', password: '' });
+    }
+  };
 
-        if(!formData.email){
-            newErrors.email = 'Email is required';
-        }else if(!/\S+@\S+\.\S+/.test(formData.email)){
-            newErrors.email = 'Email is invalid';
-        }
+  const handleClose = () => {
+    setFormData({ email: '', password: '' });
+    setErrors({});
+    onClose();
+  };
 
-        if(!formData.password){
-            newErrors.password= 'Password is required';
-        }
-        return newErrors;
-    };
-
-    const handleSubmit = async (e) =>{
-        e.preventDefault();
-
-        const newErrors= validate();
-        if(Object.keys(newErrors).length>0){
-            setErrors(newErrors);
-            return;
-        }
-
-        setLoading(true);
-        const result = await login(formData);
-        setLoading(false);
-
-        if(result.success){
-            onClose();
-            setFormData({email: '', password: ''});
-        }
-    };
-    const handleClose = () =>{
-        setFormData({email: '', password:''});
-        setErrors({});
-        onClose();
-    };
   return (
     <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-      {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <Dialog.Title className="text-2xl font-bold text-gray-900">
               Welcome Back
@@ -81,9 +79,7 @@ const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
@@ -106,7 +102,6 @@ const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -129,7 +124,20 @@ const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* NEW: Forgot Password Link */}
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => {
+                  handleClose();
+                  onOpenForgotPassword();
+                }}
+                className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -139,7 +147,6 @@ const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
             </button>
           </form>
 
-          {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Don't have an account?{' '}
@@ -160,4 +167,4 @@ const loginModal =({isOpen, onClose, onSwitchToRegister}) => {
   );
 };
 
-export default loginModal;
+export default LoginModal;

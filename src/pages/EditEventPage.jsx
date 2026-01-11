@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import EventForm from '../components/events/eventForm';
-import Loading from '../components/common/loading';
+import Loading from '../components/common/Loading';
 import { eventsAPI } from '../api/events.api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
-const editEventPage = () => {
+const EditEventPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -84,4 +84,4 @@ const editEventPage = () => {
   );
 };
 
-export default editEventPage;
+export default EditEventPage;

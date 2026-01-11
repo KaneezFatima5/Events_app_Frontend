@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { FiX, FiMail, FiLock, FiUser, FiBookOpen } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
-import { DEPARTMENTS } from '../../utils/constants';
+import { DEPARTMENTS } from '../../utils/Constants';
 
-const registerModal = ({ isOpen, onClose, onSwitchToLogin }) => {
+const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -312,4 +312,4 @@ const registerModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   );
 };
 
-export default registerModal;
+export default RegisterModal;

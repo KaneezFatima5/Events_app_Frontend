@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { FiCalendar, FiMapPin, FiUsers, FiClock } from 'react-icons/fi';
 import { formatDate, formatTime } from '../../utils/dateHelpers';
 
-const eventCard = ({ event }) => {
+const EventCard = ({ event }) => {
   const getEventTypeColor = (type) => {
     const colors = {
       EDUCATIONAL: 'bg-blue-100 text-blue-800',
@@ -46,6 +46,16 @@ const eventCard = ({ event }) => {
             {event.type}
           </span>
         </div>
+
+        {/* NEW: Attendee Count Badge */}
+        {event.attendeeCount > 0 && (
+          <div className="absolute bottom-3 left-3">
+            <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center space-x-1">
+              <FiUsers size={12} />
+              <span>{event.attendeeCount} attending</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -82,11 +92,13 @@ const eventCard = ({ event }) => {
             <span>{event.department}</span>
           </div>
 
-          {/* Capacity (if available) */}
+          {/* Capacity */}
           {event.capacity && (
             <div className="flex items-center text-gray-600 text-sm">
               <FiClock className="mr-2 text-primary-600" />
-              <span>Capacity: {event.capacity}</span>
+              <span>
+                {event.attendeeCount || 0} / {event.capacity} capacity
+              </span>
             </div>
           )}
         </div>
@@ -105,4 +117,4 @@ const eventCard = ({ event }) => {
   );
 };
 
-export default eventCard;
+export default EventCard;

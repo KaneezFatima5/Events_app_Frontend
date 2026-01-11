@@ -4,7 +4,7 @@ import EventForm from '../components/events/eventForm';
 import { useAuth } from '../context/AuthContext';
 import { useEffect } from 'react';
 
-const createEventPage = () => {
+const CreateEventPage = () => {
   const navigate = useNavigate();
   const { isOrganizer } = useAuth();
 
@@ -46,4 +46,4 @@ const createEventPage = () => {
   );
 };
 
-export default createEventPage;
+export default CreateEventPage;

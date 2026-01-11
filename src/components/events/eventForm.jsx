@@ -6,7 +6,7 @@ import { eventsAPI } from '../../api/events.api';
 import { filesAPI } from '../../api/files.api';
 import { toast } from 'react-toastify';
 
-const eventForm = ({ initialData = null, isEdit = false }) => {
+const EventForm = ({ initialData = null, isEdit = false }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: initialData?.title || '',
@@ -404,4 +404,4 @@ const eventForm = ({ initialData = null, isEdit = false }) => {
   );
 };
 
-export default eventForm;
+export default EventForm;

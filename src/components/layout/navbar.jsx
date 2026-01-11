@@ -1,16 +1,17 @@
-import {Link, useNavigate} from 'react-router-dom';
-import {useAuth} from '../../context/AuthContext';
-import { FiCalendar, FiUser, FiLogOut, FiPlus } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { FiCalendar, FiUser, FiLogOut, FiPlus, FiCheckCircle } from 'react-icons/fi';
 
-const navbar = ({onOpenLogin, onOpenRegister}) => {
-    const {user, logout, isAuthenticated, isOrganizer} = useAuth();
-    const navigate = useNavigate();
+const Navbar = ({ onOpenLogin, onOpenRegister }) => {
+  const { user, logout, isAuthenticated, isOrganizer } = useAuth();
+  const navigate = useNavigate();
 
-    const handleLogout = () =>{
-        logout();
-        naviagate('/');
-    };
-return (
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -36,6 +37,17 @@ return (
             >
               All Events
             </Link>
+
+            {/* NEW: My Attending Events - Show for all authenticated users */}
+            {isAuthenticated && (
+              <Link
+                to="/my-attending"
+                className="text-gray-700 hover:text-primary-600 transition flex items-center space-x-1"
+              >
+                <FiCheckCircle size={18} />
+                <span>My Attending</span>
+              </Link>
+            )}
             
             {isAuthenticated && isOrganizer() && (
               <>
@@ -97,4 +109,4 @@ return (
   );
 };
 
-export default navbar;
+export default Navbar;

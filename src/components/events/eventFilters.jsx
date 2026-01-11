@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FiSearch, FiFilter, FiX } from 'react-icons/fi';
 import { EVENT_TYPES, DEPARTMENTS } from '../../utils/constants';
 
-const eventFilters = ({ onFilterChange }) => {
+const EventFilters = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     search: '',
     department: '',
@@ -186,4 +186,4 @@ const eventFilters = ({ onFilterChange }) => {
   );
 };
 
-export default eventFilters;
+export default EventFilters;
