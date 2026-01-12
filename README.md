@@ -71,7 +71,7 @@
 
 ## 🚀 Demo
 
-Check out the live demo: [Campus Events Demo](#) *(Add your deployed link)*
+Check out the live demo: to be deployed 
 
 **Test Credentials:**
 - **Attendee:** `student@university.edu` / `password123`
@@ -124,11 +124,11 @@ Check out the live demo: [Campus Events Demo](#) *(Add your deployed link)*
 ### Prerequisites
 - Node.js 16.x or higher
 - npm or yarn
-- Running backend server ([Backend Repo](#))
+- Running backend server
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/campus-events-frontend.git
+git clone https://github.com/kaneezfatima117/campus-events-frontend.git
 cd campus-events-frontend
 ```
 
