@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { eventsAPI } from '../api/events.api';
 import EventCards from '../components/events/EventCard';
-import EventFilters from '../components/events/eventFilters';
+import EventFilters from '../components/events/EventFilters';
 import Loading from '../components/common/Loading';
 import { FiCalendar } from 'react-icons/fi';
 
