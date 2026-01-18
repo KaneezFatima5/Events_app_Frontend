@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import EventForm from '../components/events/eventForm';
+import EventForm from '../components/events/EventForm';
 import Loading from '../components/common/Loading';
 import { eventsAPI } from '../api/events.api';
 import { useAuth } from '../context/AuthContext';

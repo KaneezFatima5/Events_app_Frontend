@@ -36,7 +36,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiPlus, FiCalendar } from 'react-icons/fi';
 import { eventsAPI } from '../api/events.api';
 import EventCard from '../components/events/EventCard';
-import Loading from '../components/common/loading';
+import Loading from '../components/common/Loading';
 import { useAuth } from '../context/AuthContext';
 
 const MyEventsPage = () => {

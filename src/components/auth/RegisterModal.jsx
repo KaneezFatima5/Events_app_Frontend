@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { FiX, FiMail, FiLock, FiUser, FiBookOpen } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
-import { DEPARTMENTS } from '../../utils/Constants';
+import { DEPARTMENTS } from '../../utils/constants';
 
 const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { register } = useAuth();

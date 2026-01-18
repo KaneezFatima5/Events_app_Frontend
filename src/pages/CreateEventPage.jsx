@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import EventForm from '../components/events/eventForm';
+import EventForm from '../components/events/EventForm';
 import { useAuth } from '../context/AuthContext';
 import { useEffect } from 'react';
 
