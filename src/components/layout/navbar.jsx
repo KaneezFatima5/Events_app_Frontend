@@ -12,37 +12,39 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-lg sticky top-0 z-50 border-b-4 border-primary-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <FiCalendar className="text-primary-600 text-2xl" />
-            <span className="text-xl font-bold text-gray-900">
-              Campus Events
-            </span>
+          <Link to="/" className="flex items-center space-x-3">
+            <img src="/unm-logo.png" alt="UNM" className="h-10 w-auto" />
+            <div>
+              <span className="text-xl font-bold text-primary-500">
+                Campus Events
+              </span>
+              <p className="text-xs text-secondary-500">University of New Mexico</p>
+            </div>
           </Link>
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className="text-gray-700 hover:text-primary-600 transition"
+              className="text-secondary-700 hover:text-primary-500 transition font-medium"
             >
               Home
             </Link>
             <Link
               to="/events"
-              className="text-gray-700 hover:text-primary-600 transition"
+              className="text-secondary-700 hover:text-primary-500 transition font-medium"
             >
               All Events
             </Link>
 
-            {/* NEW: My Attending Events - Show for all authenticated users */}
             {isAuthenticated && (
               <Link
                 to="/my-attending"
-                className="text-gray-700 hover:text-primary-600 transition flex items-center space-x-1"
+                className="text-secondary-700 hover:text-primary-500 transition flex items-center space-x-1 font-medium"
               >
                 <FiCheckCircle size={18} />
                 <span>My Attending</span>
@@ -53,13 +55,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               <>
                 <Link
                   to="/my-events"
-                  className="text-gray-700 hover:text-primary-600 transition"
+                  className="text-secondary-700 hover:text-primary-500 transition font-medium"
                 >
                   My Events
                 </Link>
                 <Link
                   to="/create-event"
-                  className="flex items-center space-x-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
+                  className="flex items-center space-x-1 bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition shadow-md"
                 >
                   <FiPlus />
                   <span>Create Event</span>
@@ -72,15 +74,19 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <FiUser className="text-gray-600" />
-                  <span className="text-gray-700 font-medium">
+                <div className="flex items-center space-x-2 bg-secondary-100 px-3 py-2 rounded-lg">
+                  <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">
+                      {user?.fullName.charAt(0)}
+                    </span>
+                  </div>
+                  <span className="text-secondary-700 font-medium">
                     {user?.fullName}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-red-600 transition"
+                  className="flex items-center space-x-1 text-secondary-600 hover:text-primary-500 transition"
                 >
                   <FiLogOut />
                   <span>Logout</span>
@@ -90,13 +96,13 @@ const Navbar = ({ onOpenLogin, onOpenRegister }) => {
               <>
                 <button
                   onClick={onOpenLogin}
-                  className="text-gray-700 hover:text-primary-600 transition"
+                  className="text-secondary-700 hover:text-primary-500 transition font-medium"
                 >
                   Login
                 </button>
                 <button
                   onClick={onOpenRegister}
-                  className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
+                  className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition shadow-md"
                 >
                   Sign Up
                 </button>

@@ -120,18 +120,18 @@ const EventDetailPage = () => {
   };
 
   const getEventTypeColor = (type) => {
-    const colors = {
-      EDUCATIONAL: 'bg-blue-100 text-blue-800',
-      RECREATIONAL: 'bg-green-100 text-green-800',
-      COMPETITION: 'bg-red-100 text-red-800',
-      WORKSHOP: 'bg-purple-100 text-purple-800',
-      SEMINAR: 'bg-yellow-100 text-yellow-800',
-      SPORTS: 'bg-orange-100 text-orange-800',
-      CULTURAL: 'bg-pink-100 text-pink-800',
-      OTHER: 'bg-gray-100 text-gray-800',
-    };
-    return colors[type] || colors.OTHER;
+  const colors = {
+    EDUCATIONAL: 'bg-blue-100 text-blue-800 border border-blue-200',
+    RECREATIONAL: 'bg-green-100 text-green-800 border border-green-200',
+    COMPETITION: 'bg-primary-100 text-primary-800 border border-primary-200',
+    WORKSHOP: 'bg-purple-100 text-purple-800 border border-purple-200',
+    SEMINAR: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
+    SPORTS: 'bg-orange-100 text-orange-800 border border-orange-200',
+    CULTURAL: 'bg-pink-100 text-pink-800 border border-pink-200',
+    OTHER: 'bg-secondary-100 text-secondary-800 border border-secondary-200',
   };
+  return colors[type] || colors.OTHER;
+};
 
   if (loading) {
     return (

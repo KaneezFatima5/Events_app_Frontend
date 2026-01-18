@@ -14,22 +14,39 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with UNM colors */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f3f4f6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #BA0C2F;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #9B0A26;
+}
+
+/* UNM Cherry Red gradient backgrounds */
+.gradient-cherry {
+  background: linear-gradient(135deg, #BA0C2F 0%, #9B0A26 100%);
+}
+
+.gradient-cherry-light {
+  background: linear-gradient(135deg, #fca5a5 0%, #BA0C2F 100%);
+}
+
+/* Glass morphism effect with UNM colors */
+.glass-effect {
+  background: rgba(186, 12, 47, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(186, 12, 47, 0.2);
 }
