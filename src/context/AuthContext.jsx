@@ -1,4 +1,4 @@
-import {createContent, useState, useContext, useEffect, createContext, Children} from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import {authAPI} from '../api/auth.api';
 import {toast} from 'react-toastify';
 import { success } from 'zod';
@@ -39,7 +39,7 @@ export const AuthProvider = ({children}) => {
 
     const register = async (data, isOrganizer=false)=>{
         try{
-            const response = isOrganizer?await AuthAPI.registerOrganizer(data):await authAPI.registerAttendee(data);
+            const response = isOrganizer?await authAPI.registerOrganizer(data):await authAPI.registerAttendee(data);
 
             const {token, ...userData}= response.data;
 
@@ -50,7 +50,7 @@ export const AuthProvider = ({children}) => {
             toast.success('Registration successful!');
             return {success:true};
         }catch(error){
-            const message  =error.respnonse?.data?.message || 'Registration failed';
+            const message  =error.response?.data?.message || 'Registration failed';
             toast.error(message);
             return {success: false, error: message};
         }
