@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL ='http://localhost:8080/api/v1';
+const API_BASE_URL =import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
 
 export const filesAPI ={
     uploadEventImage: async (file) =>{
@@ -10,7 +10,7 @@ export const filesAPI ={
         const token = localStorage.getItem('authToken');
 
         const response = await axios.post(
-            `${API_BASE_URL}/files/upload/event-images`,
+            `${API_BASE_URL}/files/upload/event-image`,
             formData,
             {
                 headers:{
