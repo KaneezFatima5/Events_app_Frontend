@@ -10,7 +10,7 @@ export const filesAPI ={
         const token = localStorage.getItem('authToken');
 
         const response = await axios.post(
-            `${API_BASE_URL}/files/upload/event-image`,
+            `${API_BASE_URL}/files/upload/event-images`,
             formData,
             {
                 headers:{
