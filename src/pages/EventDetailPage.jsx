@@ -294,31 +294,34 @@ const EventDetailPage = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {!canEditOrDelete() && (
-                <button
-                  onClick={handleAttendanceToggle}
-                  disabled={attendanceLoading}
-                  className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded-lg transition font-medium disabled:opacity-50 ${
-                    attendanceStatus.isAttending
-                      ? 'bg-red-600 text-white hover:bg-red-700'
-                      : 'bg-primary-600 text-white hover:bg-primary-700'
-                  }`}
-                >
-                  {attendanceLoading ? (
-                    <span>Loading...</span>
-                  ) : attendanceStatus.isAttending ? (
-                    <>
-                      <FiX />
-                      <span>Cancel Registration</span>
-                    </>
-                  ) : (
-                    <>
-                      <FiCheck />
-                      <span>I'm Attending</span>
-                    </>
-                  )}
-                </button>
-              )}
+              {canEditOrDelete() && (
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      to={`/events/${event.id}/edit`}
+                      className="flex items-center space-x-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition shadow-lg flex-1 sm:flex-initial justify-center"
+                    >
+                      <FiEdit />
+                      <span>Edit Event</span>
+                    </Link>
+                    <button
+                      onClick={handleDelete}
+                      disabled={deleting}
+                      className="flex items-center space-x-2 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-initial justify-center"
+                    >
+                      {deleting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Deleting...</span>
+                        </>
+                      ) : (
+                        <>
+                          <FiTrash2 />
+                          <span>Delete Event</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               <button
                 onClick={handleDownloadCalendar}
                 className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"

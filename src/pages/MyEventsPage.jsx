@@ -1,52 +1,20 @@
-// // src/pages/Events.jsx - Clean and fast!
-// import { useState } from 'react';
-// import { useQuery } from '@tanstack/react-query';
-// import { eventsAPI } from '../api/events';
-
-// export default function Events() {
-//   const [filters, setFilters] = useState({});
-  
-//   const { data: events, isLoading } = useQuery({
-//     queryKey: ['events', filters],
-//     queryFn: () => eventsAPI.getEvents(filters)
-//   });
-
-//   return (
-//     <div className="max-w-7xl mx-auto px-4 py-8">
-//       <h1 className="text-3xl font-bold mb-6">Campus Events</h1>
-      
-//       {/* Filter bar */}
-//       <FilterBar onChange={setFilters} />
-      
-//       {/* Events grid */}
-//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-//         {isLoading ? (
-//           <p>Loading...</p>
-//         ) : (
-//           events?.map(event => (
-//             <EventCard key={event.id} event={event} />
-//           ))
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiPlus, FiCalendar } from 'react-icons/fi';
+import { FiPlus, FiCalendar, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { eventsAPI } from '../api/events.api';
-import EventCard from '../components/events/EventCard';
 import Loading from '../components/common/Loading';
 import { useAuth } from '../context/AuthContext';
+import { formatDate, formatTime } from '../utils/dateHelpers';
+import { toast } from 'react-toastify';
 
 const MyEventsPage = () => {
   const navigate = useNavigate();
   const { isOrganizer } = useAuth();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
-    // Redirect if user is not an organizer
     if (!isOrganizer()) {
       navigate('/');
       return;
@@ -60,9 +28,43 @@ const MyEventsPage = () => {
       setEvents(response.data);
     } catch (error) {
       console.error('Error fetching my events:', error);
+      toast.error('Failed to load events');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async (eventId, eventTitle) => {
+    if (!window.confirm(`Are you sure you want to delete "${eventTitle}"?`)) {
+      return;
+    }
+
+    setDeletingId(eventId);
+    try {
+      await eventsAPI.deleteEvent(eventId);
+      toast.success('Event deleted successfully');
+      // Remove from list
+      setEvents(events.filter(event => event.id !== eventId));
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const getEventTypeColor = (type) => {
+    const colors = {
+      EDUCATIONAL: 'bg-blue-100 text-blue-800 border border-blue-200',
+      RECREATIONAL: 'bg-green-100 text-green-800 border border-green-200',
+      COMPETITION: 'bg-primary-100 text-primary-800 border border-primary-200',
+      WORKSHOP: 'bg-purple-100 text-purple-800 border border-purple-200',
+      SEMINAR: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
+      SPORTS: 'bg-orange-100 text-orange-800 border border-orange-200',
+      CULTURAL: 'bg-pink-100 text-pink-800 border border-pink-200',
+      OTHER: 'bg-secondary-100 text-secondary-800 border border-secondary-200',
+    };
+    return colors[type] || colors.OTHER;
   };
 
   return (
@@ -80,7 +82,7 @@ const MyEventsPage = () => {
           </div>
           <Link
             to="/create-event"
-            className="flex items-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition"
+            className="flex items-center space-x-2 bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition shadow-lg"
           >
             <FiPlus />
             <span>Create Event</span>
@@ -100,7 +102,97 @@ const MyEventsPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <div
+                  key={event.id}
+                  className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                >
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    {event.imageUrl ? (
+                      <img
+                        src={event.imageUrl}
+                        alt={event.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                        <FiCalendar className="text-white text-6xl opacity-50" />
+                      </div>
+                    )}
+                    
+                    {/* Event Type Badge */}
+                    <div className="absolute top-3 right-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getEventTypeColor(
+                          event.type
+                        )}`}
+                      >
+                        {event.type}
+                      </span>
+                    </div>
+
+                    {/* Attendee Count Badge */}
+                    {event.attendeeCount > 0 && (
+                      <div className="absolute bottom-3 left-3">
+                        <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700">
+                          {event.attendeeCount} attending
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5">
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                      {event.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {event.description}
+                    </p>
+
+                    {/* Event Details */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-gray-600 text-sm">
+                        <FiCalendar className="mr-2 text-primary-600" />
+                        <span>
+                          {formatDate(event.startDate)} · {formatTime(event.startDate)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-4 border-t border-gray-200">
+                      <Link
+                        to={`/events/${event.id}`}
+                        className="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium text-sm"
+                      >
+                        View Details
+                      </Link>
+                      <Link
+                        to={`/events/${event.id}/edit`}
+                        className="flex items-center justify-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition"
+                        title="Edit Event"
+                      >
+                        <FiEdit />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(event.id, event.title)}
+                        disabled={deletingId === event.id}
+                        className="flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Delete Event"
+                      >
+                        {deletingId === event.id ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <FiTrash2 />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </>
@@ -115,7 +207,7 @@ const MyEventsPage = () => {
             </p>
             <Link
               to="/create-event"
-              className="inline-flex items-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition"
+              className="inline-flex items-center space-x-2 bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition"
             >
               <FiPlus />
               <span>Create Event</span>
