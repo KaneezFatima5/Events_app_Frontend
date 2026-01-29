@@ -24,6 +24,9 @@ const EditEventPage = () => {
       const eventData = response.data;
 
       // Check if user can edit this event
+      console.log('Event Organizer ID:', eventData.organizer.id, typeof eventData.organizer.id);
+      console.log('Current User ID:', user?.id, typeof user?.id);
+      console.log('User Role:', user?.role);
       if (
         Number(eventData.organizer.id) !== Number(user?.id) &&
       user?.role !== 'ADMIN'
