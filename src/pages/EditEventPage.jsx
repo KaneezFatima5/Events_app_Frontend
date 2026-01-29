@@ -13,7 +13,17 @@ const EditEventPage = () => {
   const { user, loading: authLoading } = useAuth(); // Get loading state from auth
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  useEffect(() => {
+    // Wait for user to be loaded before fetching event
+    if (!authLoading && user) {
+      fetchEvent();
+    } else if (!authLoading && !user) {
+      // Not logged in
+      toast.error('Please log in to edit events');
+      navigate('/login');
+    }
+  }, [id, user, authLoading]);
+  
   useEffect(() => {
     fetchEvent();
   }, [id]);
