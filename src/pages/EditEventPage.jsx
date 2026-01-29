@@ -25,8 +25,8 @@ const EditEventPage = () => {
 
       // Check if user can edit this event
       if (
-        eventData.organizer.id !== user?.id &&
-        user?.role !== 'ADMIN'
+        Number(eventData.organizer.id) !== Number(user?.id) &&
+      user?.role !== 'ADMIN'
       ) {
         toast.error("You don't have permission to edit this event");
         navigate('/events');
