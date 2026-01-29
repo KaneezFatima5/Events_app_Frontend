@@ -23,10 +23,10 @@ const EditEventPage = () => {
       navigate('/login');
     }
   }, [id, user, authLoading]);
-  
-  useEffect(() => {
-    fetchEvent();
-  }, [id]);
+
+  // useEffect(() => {
+  //   fetchEvent();
+  // }, [id]);
 
   const fetchEvent = async () => {
     try {
