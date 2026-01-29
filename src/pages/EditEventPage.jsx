@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 const EditEventPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Get loading state from auth
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +24,7 @@ const EditEventPage = () => {
       const eventData = response.data;
 
       // Check if user can edit this event
-      console.log('Event Organizer ID:', eventData, typeof eventData);
+      console.log('Event Organizer ID:', eventData.organizer.id, typeof eventData.organizer.id);
       console.log('Current User ID:', user?.id, typeof user?.id);
       console.log('User Role:', user?.role);
       if (
