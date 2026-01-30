@@ -1,4 +1,4 @@
-# 🎓 Campus Events - Frontend
+# 🎓 Campus Events - Frontend Live: https://campusevents-pi.vercel.app/
 
 <div align="center">
 
