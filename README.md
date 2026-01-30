@@ -24,10 +24,7 @@
 
 
 ### Event Discovery
-![Event Discovery](https://via.placeholder.com/800x400/8b5cf6/ffffff?text=Event+Discovery)
-
-### Event Details
-![Event Details](https://via.placeholder.com/800x400/10b981/ffffff?text=Event+Details)
+<img width="3827" height="2068" alt="image" src="https://github.com/user-attachments/assets/e309d365-a9e3-4228-b21b-50573f0ea502" />
 
 </div>
 
