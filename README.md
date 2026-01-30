@@ -20,7 +20,8 @@
 <div align="center">
 
 ### Landing Page
-![Landing Page](https://via.placeholder.com/800x400/3b82f6/ffffff?text=Landing+Page)
+<img width="3817" height="2073" alt="image" src="https://github.com/user-attachments/assets/965e290c-e5a2-4c23-a654-d374d8c845ad" />
+
 
 ### Event Discovery
 ![Event Discovery](https://via.placeholder.com/800x400/8b5cf6/ffffff?text=Event+Discovery)
